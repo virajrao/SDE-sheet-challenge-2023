@@ -1,0 +1,198 @@
+//  Question 1 - Rotate the matrix
+
+public void rotate(int[][] arr) {
+        int n = arr.length;
+        int m = arr[0].length;
+    
+    // reverse the array 
+        for(int i=0;i<n/2;i++){
+             for(int j=0;j<m;j++){
+                  int temp = arr[i][j];  
+                  arr[i][j] = arr[n-i-1][j];
+                  arr[n-i-1][j] = temp;
+             }
+         }
+		  
+
+        //  swap the symmetry
+		 for(int i=0;i<n;i++){
+              for(int j=i+1;j<m;j++){
+            	  int temp = arr[i][j];
+                  arr[i][j] = arr[j][i];
+                  arr[j][i] = temp;
+              }
+          }		 
+    }
+
+
+
+
+
+
+//    Question 2 - Merge Overlapping subintervals 
+
+ public int[][] merge(int[][] arr) {
+    //  sorting the array
+        Arrays.sort(arr,(a,b) -> a[0] - b[0]);
+    
+    //  creating  a list 
+        ArrayList<int[]>result = new ArrayList<int[]>(); 
+        int n = arr.length;
+        
+        for(int i=0;i<n;i++){
+           if(result.size() == 0 || result.get(result.size()-1)[1] < arr[i][0]){ 
+                result.add(arr[i]);
+           }
+           else {
+               result.get(result.size()-1)[1] = Math.max(result.get(result.size()-1)[1], arr[i][1]);
+           }
+        }
+    return result.toArray(new int[result.size()][]);
+    }
+
+
+
+
+
+
+// Question 3 - Merge 2 sorted array without any extra space 
+
+public void merge(int[] arr1, int m, int[] arr2, int n) {
+         
+         int i =m-1;
+         int j= n-1;
+         int k = m+n-1;
+        //  starting from the last and then doing the needful
+        while(i>=0 && j>=0){
+            if(arr1[i] > arr2[j]){
+                arr1[k] = arr1[i];
+                i--;
+            }
+            
+            else{
+                arr1[k] = arr2[j]; 
+                j--;
+            } 
+            k--;
+        }
+    // Now copying the rest of the elements of arr2 to arr1 
+        while(j>=0){
+            arr1[k] = arr2[j];
+            j--;
+            k--;
+        }    
+    }
+
+
+
+
+
+// Question 4 - Find the duplicate in the array of n+1 elements
+
+
+public int findDuplicate(int[] nums) {
+        for(int num:nums){
+            int idx = Math.abs(num);
+            if(nums[idx] < 0){
+                return idx;
+            }
+            nums[idx] = -nums[idx]; 
+        }
+         return -1;
+    }
+
+
+
+
+
+
+// Question 5 - Repeat and missing no.
+ 
+public static int[] missingAndRepeating(ArrayList<Integer> arr, int n) {
+        int miss = -1;
+        int repeat = -1;
+        
+        
+        for(int i=1;i<=n;i++){
+           int idx = Math.abs(arr.get(i-1));
+           if(arr.get(idx-1)< 0){
+                repeat = idx;
+                continue;
+           }
+            int val = - arr.get(idx-1); 
+           arr.set(idx-1, val);
+        }
+
+
+        for(int i=0;i<n;i++){
+                if(arr.get(i)>0)
+                    miss = i+1;
+        }
+    
+        int arr1[]= new int[2];
+        
+        arr1[0] = miss;
+        arr1[1] = repeat;
+        
+        return arr1;
+
+    }
+
+
+
+
+
+// Question 6 - inversion of array (Merge  sort approach)
+
+public static int merge(int low,int high,int mid,long arr[]){
+    int cnt = 0;
+    int left = low; 
+    int right = mid+1;
+    ArrayList<Long> temp = new ArrayList<>();
+    
+    while(left<= mid && right <= high){
+        if(arr[left] < arr[right]){
+            temp.add(arr[left]);
+            left++;
+
+        }
+        else{
+            cnt += mid-left+1;
+             temp.add(arr[right]);
+             right++;
+            }
+        }
+
+        while(left <= mid){
+            temp.add(arr[left]);
+            left++;
+        }
+
+        while(right<=high){
+            temp.add(arr[right]);
+            right++;
+        }
+        
+        for(int i=low;i<=high;i++){
+                arr[i] = temp.get(i-low);
+        }
+        return cnt;
+    }
+
+public static int mergesort(int low,int high,long arr[]){
+        int cnt = 0;
+        if(low >= high)
+            return 0;
+        
+        int mid = low + (high-low)/2;
+         cnt+= mergesort(low, mid, arr);
+        cnt+= mergesort(mid+1, high, arr);
+        
+        cnt += merge(low,high,mid,arr);
+        
+        return cnt;
+}
+
+    public static long getInversions(long arr[], int n) {             
+        return mergesort(0, n-1, arr);
+    }
