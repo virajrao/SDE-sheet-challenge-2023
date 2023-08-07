@@ -1,0 +1,227 @@
+########### 2 Sum Problem  ###########
+class pair{
+        int val;
+        int idx;
+        
+        pair(int val,int idx){
+            this.val = val;
+            this.idx=  idx;
+        }
+    }
+    
+    public int[] twoSum(int[] nums, int target) {
+    int n = nums.length;
+    pair arr[] = new pair[n]; 
+    
+    for(int i=0;i<nums.length;i++){
+        pair p = new pair(nums[i],i);
+        arr[i] = p;
+    }
+    Arrays.sort(arr,(a,b) ->(a.val - b.val));
+
+        int low  = 0;
+        int high = n-1; 
+        int res[] = new int[2]; 
+        while(low < high){
+            
+        if(arr[low].val + arr[high].val ==  target){
+            res[0]= arr[low].idx;
+            res[1]= arr[high].idx;
+            break;
+        }
+        else if(arr[low].val + arr[high].val < target){
+                low++;
+        }
+
+        else{
+                high--;
+        }
+
+        }
+
+return res;
+    }
+
+########### 4-Sum Problem  ###########
+ public List<List<Integer>> fourSum
+    (int[]nums, int target) {
+        // doing it by brute force approach
+        // reducing it to a better approach 
+
+        int n = nums.length;
+        HashSet<List<Integer>>set = new HashSet<>();
+
+        for(int i=0;i<n;i++){
+            for(int j = i+1;j<n;j++){
+                HashSet<Integer>hash = new HashSet<Integer>();
+                for(int k=j+1;k<n;k++){
+                    long sum = nums[i] + nums[j];
+                    sum += nums[k]; 
+                    long fourth = target - sum;
+
+                        if( hash.contains(fourth)){
+                            List<long>temp = new ArrayList<>();
+                            
+                            temp.add(nums[i]);
+                            temp.add(nums[j]);
+                            temp.add(nums[k]);
+                            temp.add(fourth);
+                            
+                            Collections.sort(temp);
+                            set.add(temp);
+                        }                             
+                            hash.add(nums[k]);
+                    }
+                }
+            }
+           
+            List<List<Integer>> ans  = new ArrayList<>(set);
+            return ans;
+    }
+
+
+  ########### 	Longest Consecutive Sequence  ###########
+   public int longestConsecutive(int[] nums) {
+       int n = nums.length;
+    //    first we need to sort the array
+       Arrays.sort(nums);
+       int maxlen = 0;
+                int val = 1;
+// handling the edge case if num is empty 
+if(nums.length == 0)
+    return 0;
+
+       for(int i=1;i<n;i++){
+            if(nums[i-1] != nums[i]){
+                if(nums[i-1]+1 == nums[i]){
+                    val++;
+                }
+                else {
+                    maxlen = Math.max(maxlen,val);
+                    val = 1;
+                }
+            }
+       }
+       return Math.max(maxlen,val);
+    }
+
+
+  ########### Largest Subarray with K sum	###########
+
+// better solution 
+
+    //   int sum;
+    //   for(int i=0;i<n;i++){
+    //         sum = 0; 
+    //       int  idx = 0;
+    //       for(int j=i;j<n;j++){
+    //             sum+= arr[j];
+    //             idx+=1;
+    //             if(sum == 0){
+    //                 maxlen = Math.max(maxlen,idx);         
+    //             }
+    //       }
+    //   }
+    //   optimal solution
+        // using the prefix sum solution 
+        
+    HashMap<Integer,Integer>map = new HashMap<>();
+        int sum = 0;
+        int maxlen = 0;
+        
+        map.put(sum,0);
+        for(int i=0;i<n;i++){
+            sum+=arr[i];
+            if(map.containsKey(sum)){
+                
+                int val = (i+1) - map.get(sum);
+                maxlen = Math.max(maxlen,val);
+            }
+            else{
+                map.put(sum,i+1);
+            }
+        }
+        return maxlen;
+    }
+
+
+###########  Count number of subarrays with given xor K  ###########
+
+//    through brute force/better approach
+
+            // int n = arr.length;
+            // int count = 0;
+
+            // for(int i=0;i<n;i++){
+            //     int xor = 0 ;
+            // for(int j=i;j<n;j++){
+            //     xor ^= arr[j];
+            //         if(xor == b){
+            //             count++;
+            //         }
+            //     }
+            // }
+            
+
+
+// through the optimal approach 
+    HashMap<Integer,Integer> map = new HashMap<>();
+    // moving through the sliding window, we have  
+    int count = 0;
+    int n = arr.length; 
+    map.put(0,1);
+    int xr = 0;
+    
+    for(int i=0;i<n;i++){
+        xr = xr^arr[i];    
+        int x = xr^b;
+        
+        if(map.containsKey(x)){
+            count+= map.get(x);
+        }
+
+            map.put(xr,map.getOrDefault(xr,0)+1); 
+    
+    }
+        return count;
+    }
+
+###########  Longest Substring without repeat  ###########  
+
+public int lengthOfLongestSubstring(String s) {
+                
+        HashSet<Character> set = new HashSet<>();
+        int maxlen = 0;
+        
+        int n = s.length();
+        int left = 0; 
+        // int maxlen = Integer.MIN_VALUE;
+
+        for(int right=0;right<n;right++){
+            if(!set.contains(s.charAt(right))){
+                set.add(s.charAt(right));
+                maxlen = Math.max(right-left+1,maxlen);
+            }            
+            
+            else {
+                while(s.charAt(left) != s.charAt(right)){           // removing all the characters that are before the repeating character
+                    set.remove(s.charAt(left));          
+                    left++;
+                }                
+                    set.remove(s.charAt(left));   // then removing the repeated character  
+                    left++;
+                    set.add(s.charAt(right));
+            }
+        }       
+        return maxlen;
+    } 
+
+
+
+
+
+
+
+
+
+
