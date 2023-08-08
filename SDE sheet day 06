@@ -1,0 +1,263 @@
+#################   Find intersection point of Y LinkedList  #################
+  
+  
+  public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+
+// first Optimal approach 
+
+//     ListNode temp1 = headA;
+//     ListNode temp2 = headB;
+    
+// int a = 0;
+// int b = 0;
+//     while(temp1 != null){
+//         temp1 = temp1.next; 
+//         a++;
+//     }
+
+//     while(temp2 != null){
+//         temp2 = temp2.next; 
+//         b++;
+//     }
+// ListNode taila = headA;
+// ListNode tailb = headB; 
+
+
+//     if(a>b){
+//         for(int i=0;i<a-b;i++){
+//             taila=  taila.next;
+//         }
+//     }
+
+//     else{
+//         for(int i=0;i<b-a;i++){
+//             tailb=  tailb.next;
+//         }
+//     }
+    
+//     while(taila != null && tailb != null){
+//         if(taila == tailb)
+//             return tailb;
+            
+//         taila = taila.next;
+//         tailb = tailb.next;
+//         }
+//         return null;  
+    
+
+
+
+
+    // Second Optimal approach // 
+        ListNode d1 = headA;
+        ListNode d2 = headB;
+
+        while(d1 != d2){
+            d1 = (d1 ==null)?headB:d1.next;
+            d2 = (d2 ==null)?headA:d2.next;
+        }
+
+        return d1;
+    }
+
+################# Detect a cycle in Linked List #################
+    
+  public static boolean detectCycle(Node head) {
+      
+        Node fast   = head;
+        Node slow   = head;
+
+        while(fast != null  && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+            
+            if(fast == slow)
+                return true;
+
+        }
+        return false;
+    }
+
+
+
+
+    ################# Reverse Nodes in k-Group   #################
+    
+public ListNode reverseKGroup(ListNode head, int k) {
+        
+        int size = 0;
+        ListNode temp = head;
+        
+        while(temp != null){
+            temp = temp.next;
+            size++;
+        }
+            if(size == 1 || k==1)
+                return head;
+        
+        int t = size/k;
+        temp = new ListNode(-1);
+            temp.next = head; 
+        
+        ListNode prev = temp;  
+        ListNode curr = head; 
+        ListNode nex  = head.next;  
+        
+        for(int i=0;i<t ;i++){
+            for(int j=0;j<k-1;j++){
+                curr.next = nex.next;
+                nex.next = prev.next;
+                prev.next = nex;
+                nex = curr.next;
+            }
+            prev = curr;
+            
+            if(prev != null)
+                curr = prev.next;
+            
+            if(curr != null)
+                nex  = curr.next;
+            
+        }
+        return temp.next;
+    }
+
+#################  Palindrome Linked List  #################
+    
+public boolean isPalindrome(ListNode head) {
+    //   Stack<Integer>stack = new Stack<>();  
+    //     ListNode temp= head;
+        
+    //     while(temp != null){
+    //         stack.push(temp.val);
+    //         temp = temp.next;
+    //     }
+    //     temp = head;
+    //     while(!stack.isEmpty()){
+    //         if(stack.pop() != temp.val)
+    //             return false;
+    //     temp = temp.next;
+    //     }       
+    //     return true;
+    
+
+    // optimised approach
+    
+    // first step to find the mid of the linked list then reversing half of the list 
+        ListNode fast = head; 
+        ListNode slow = head; 
+        
+        while( fast != null&& fast.next != null  ){
+        fast = fast.next.next;
+        slow = slow.next;
+            
+        }
+
+    ListNode prev = slow; 
+    slow = slow.next;
+    prev.next = null;
+
+    ListNode next;
+
+    while(slow != null){
+        next = slow.next;
+        slow.next = prev;
+        prev = slow;
+        slow = next;
+    }
+fast = head;
+slow = prev;
+
+while( slow != null){
+    if(slow.val != fast.val)
+        return false;
+    
+    slow = slow.next;
+    fast = fast.next;
+}    
+return true;
+    }
+
+#################  	Find the starting point of the Loop of LinKed List  #################
+
+public ListNode detectCycle(ListNode head) {
+        // using the 2 pointers 
+        // first finding the collision point 
+        ListNode first = head;
+        ListNode second = head;
+        
+        while(first != null && first.next != null){
+            first = first.next.next;
+            second = second.next;
+            
+            if(first == second){
+                second = head;
+                             while(second != first){
+                    second = second.next;
+                    first = first.next;
+
+                }
+
+            return second;
+   
+            } 
+        }
+    return null;
+    }
+
+################# flattening a LinkedList #################
+
+Node mergeLinkList(Node a,Node b){
+        Node temp = new Node(-1);
+        Node res  = temp;
+        
+        while(a != null && b != null){
+            if(a.data < b.data){
+                temp.bottom = a;
+                a = a.bottom;
+                temp = temp.bottom;
+            }
+            
+            else {
+                temp.bottom = b;
+                b = b.bottom;
+                temp = temp.bottom;
+            }
+        }
+    
+        if(a != null){
+            temp.bottom = a;
+            
+        }
+        if(b != null){
+            temp.bottom = b;
+        }
+        return res.bottom;        
+    }
+    
+    Node flatten(Node root){
+        
+        if(root == null || root.next == null){
+            return root;
+        }
+                
+            root.next = flatten(root.next);
+           Node newhead = mergeLinkList(root,root.next);
+            
+            return newhead;
+    } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
